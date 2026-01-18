@@ -63,25 +63,25 @@ app.get('/get-donation/atasatap', (req, res) => {
         latest_id: donations.length > 0 ? donations[donations.length - 1].id : null
     };
 
+    // Prevent caching on Vercel/Roblox
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+
     if (donations.length === 0) {
         return res.json(response);
     }
 
-    // specific filtering logic
     if (afterId) {
         const index = donations.findIndex(d => d.id == afterId);
         if (index !== -1 && index < donations.length - 1) {
             // Return all donations AFTER the given ID
             response.donations = donations.slice(index + 1);
-        } else if (index === -1) {
-            // If ID not found (server restarted or too old), send all current buffered donations
-            // This ensures we catch up, though might duplicate if not careful. 
-            // Ideally we just send everything if the client's ID is unknown/stale.
-            response.donations = donations;
         }
+        // FIX: Removed the "else if (index === -1)" block.
+        // If the ID is not found (e.g. server restart), it is SAFER to return nothing 
+        // than to return everything (which causes looping/duplicates).
+        // The client will eventually sync up when a NEW donation arrives.
     } else {
-        // If no ID provided (first run), maybe just send the latest one or all?
-        // Let's send all current buffer to be safe, client handles duplication usually or just plays effects
+        // Only return all if no ID was provided at all (first connection)
         response.donations = donations;
     }
 
