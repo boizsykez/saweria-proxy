@@ -71,15 +71,15 @@ app.get('/get-donation/atasatap', (req, res) => {
     }
 
     if (afterId) {
-        const index = donations.findIndex(d => d.id == afterId);
         if (index !== -1 && index < donations.length - 1) {
             // Return all donations AFTER the given ID
             response.donations = donations.slice(index + 1);
+        } else if (index === -1) {
+            // ID not found (Server restarted & Memory wiped). 
+            // We MUST return all current data, otherwise the client gets "stuck" on the old ID.
+            // Safe to do now because Roblox script V2 has Timestamp Filtering (ignores old data).
+            response.donations = donations;
         }
-        // FIX: Removed the "else if (index === -1)" block.
-        // If the ID is not found (e.g. server restart), it is SAFER to return nothing 
-        // than to return everything (which causes looping/duplicates).
-        // The client will eventually sync up when a NEW donation arrives.
     } else {
         // Only return all if no ID was provided at all (first connection)
         response.donations = donations;
