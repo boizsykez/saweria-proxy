@@ -1,6 +1,6 @@
 {
   "name": "saweria-roblox-middleware",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple middleware to connect Saweria webhooks to Roblox",
   "main": "server.js",
   "scripts": {
@@ -12,6 +12,6 @@
     "cors": "^2.8.5"
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   }
 }
