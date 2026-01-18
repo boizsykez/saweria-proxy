@@ -101,6 +101,12 @@ app.get('/', (req, res) => {
     res.send('Saweria Middleware is Running!');
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// For Vercel, we export the app
+module.exports = app;
+
+// Only listen if running locally (not in Vercel)
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
