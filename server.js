@@ -90,7 +90,9 @@ app.get('/get-donation/atasatap', (req, res) => {
         response.latest_id = response.donations[response.donations.length - 1].id;
     } else {
         // If we serve no new donations, ensure we keep the latest known ID so client doesn't reset
-        response.latest_id = donations[donations.length - 1].id;
+        if (donations.length > 0) {
+            response.latest_id = donations[donations.length - 1].id;
+        }
     }
 
     res.json(response);
