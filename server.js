@@ -71,6 +71,7 @@ app.get('/get-donation/atasatap', (req, res) => {
     }
 
     if (afterId) {
+        const index = donations.findIndex(d => d.id === afterId);
         if (index !== -1 && index < donations.length - 1) {
             // Return all donations AFTER the given ID
             response.donations = donations.slice(index + 1);
